@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.summary       = "Operations for business logic encapsulation"
   spec.description   = "Operations for business logic encapsulation"
   spec.homepage      = "https://github.com/roman-slobodzian/operations"
-  spec.required_ruby_version = Gem::Requirement.new(">= 2.4.0")
+  spec.required_ruby_version = Gem::Requirement.new(">= 3.0.1")
 
   # spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
 
@@ -30,6 +30,10 @@ Gem::Specification.new do |spec|
 
   # Uncomment to register a new dependency of your gem
   # spec.add_dependency "example-gem", "~> 1.0"
+  spec.add_dependency "activesupport", "~> 6.0"
+  spec.add_dependency "dry-validation", "~> 1.6"
+
+  spec.add_development_dependency "byebug"
 
   # For more information and examples about making a new gem, checkout our
   # guide at: https://bundler.io/guides/creating_gem.html
