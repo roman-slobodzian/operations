@@ -20,5 +20,11 @@ Style/FrozenStringLiteralComment:
 Layout/LineLength:
   Max: 120
 
+Layout/FirstArrayElementIndentation:
+  EnforcedStyle: consistent
+
 Metrics/BlockLength:
+  Enabled: false
+
+Metrics/AbcSize:
   Enabled: false
