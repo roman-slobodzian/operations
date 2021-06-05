@@ -1,25 +1,25 @@
 class Presenter
   include Operations::Normalizer
 
-  field :first_name
-  field :last_name
+  field :first_name, :string
+  field :last_name, :string
 
   embed :company do
-    field :title
+    field :title, :string
 
     embed :location do
-      field :city
-      field :state
+      field :city, :string
+      field :state, :string
     end
 
     embed :founding do
-      field :year
+      field :year, :number
     end
   end
 
   embed :addresses do
-    field :city
-    field :state
+    field :city, :string
+    field :state, :string
   end
 end
 

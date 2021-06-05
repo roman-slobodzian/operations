@@ -10,11 +10,9 @@ module Operations
     end
 
     class_methods do
-      def field(path)
+      def field(path, type, null: false)
         self.schema += [
-          Class.new(::Operations::Normalizer::Field) do
-            self.path = path
-          end
+          ::Operations::Normalizer::Field.build_class(path: path, type: type, null: null)
         ]
       end
 
