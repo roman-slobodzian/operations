@@ -32,8 +32,10 @@ Gem::Specification.new do |spec|
   # spec.add_dependency "example-gem", "~> 1.0"
   spec.add_dependency "activesupport", "~> 6.0"
   spec.add_dependency "dry-validation", "~> 1.6"
+  spec.add_dependency "multi_json", "~> 1.0"
 
   spec.add_development_dependency "byebug"
+  spec.add_development_dependency "rack", "~> 2.2"
 
   # For more information and examples about making a new gem, checkout our
   # guide at: https://bundler.io/guides/creating_gem.html

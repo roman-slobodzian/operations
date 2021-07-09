@@ -13,10 +13,12 @@ module Operations
     end
 
     def validation_result
-      validation_contract.new.call(params)
+      validation_contract&.new&.call(params)
     end
 
     def errors
+      return {} unless self[:validation_result]
+
       self[:validation_result].errors.to_h
     end
 

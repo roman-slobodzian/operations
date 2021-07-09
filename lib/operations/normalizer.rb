@@ -28,11 +28,11 @@ module Operations
         ]
       end
 
-      def represent(data, **params)
-        return new(data, **params).represent unless data.is_a?(Enumerable)
+      def normalize(data, **params)
+        return new(data, **params).normalize unless data.is_a?(Enumerable)
 
         data.map do |data_element|
-          new(data_element, **params).represent
+          new(data_element, **params).normalize
         end
       end
     end
@@ -42,7 +42,7 @@ module Operations
       @query = query
     end
 
-    def represent
+    def normalize
       return nil if data.nil?
 
       schema.reduce({}) do |acc, field|
@@ -50,7 +50,7 @@ module Operations
 
         nested_data = data.public_send(field.path)
 
-        acc.merge(field.path => field.represent(nested_data, query: query.try(field.path)))
+        acc.merge(field.path => field.normalize(nested_data, query: query.try(field.path)))
       end
     end
   end

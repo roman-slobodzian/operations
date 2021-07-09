@@ -11,13 +11,13 @@ module Operations
         @data = data
       end
 
-      def represent
+      def normalize
         # TODO: validate datatype and log
         data
       end
 
-      def self.represent(*args, **params)
-        new(*args, **params).represent
+      def self.normalize(*args, **params)
+        new(*args, **params).normalize
       end
 
       def self.build_class(path:, type:, null:)

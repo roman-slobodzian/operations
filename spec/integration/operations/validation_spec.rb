@@ -11,7 +11,7 @@ RSpec.describe Operations::Validation do
     end
   end
 
-  subject { operation_class.new(params) }
+  subject { operation_class.new(params: params) }
 
   context "valid input" do
     let(:params) do

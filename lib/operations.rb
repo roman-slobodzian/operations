@@ -2,6 +2,7 @@
 
 require "active_support/all"
 require "dry-validation"
+require "multi_json"
 
 module Operations
   class Error < StandardError; end
@@ -13,7 +14,11 @@ end
 
 require_relative "operations/version"
 require_relative "operations/memoize"
+require_relative "operations/mounter/json_rpc_response"
+require_relative "operations/mounter/json_rpc_server"
+require_relative "operations/mounter/json_rpc_middleware"
 require_relative "operations/normalizer/field"
 require_relative "operations/normalizer"
+require_relative "operations/operation/normalizer"
 require_relative "operations/validation"
 require_relative "operations/operation"

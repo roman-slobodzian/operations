@@ -23,8 +23,20 @@ Layout/LineLength:
 Layout/FirstArrayElementIndentation:
   EnforcedStyle: consistent
 
+Layout/CaseIndentation:
+  EnforcedStyle: end
+
+Layout/EndAlignment:
+  EnforcedStyleAlignWith: variable
+
+Layout/SpaceInsideHashLiteralBraces:
+  EnforcedStyle: no_space
+
 Metrics/BlockLength:
   Enabled: false
 
 Metrics/AbcSize:
+  Enabled: false
+
+Metrics/MethodLength:
   Enabled: false

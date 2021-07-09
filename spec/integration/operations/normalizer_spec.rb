@@ -63,7 +63,7 @@ RSpec.describe Operations::Normalizer do
     end
   end
 
-  describe "#represent" do
+  describe "#normalize" do
     let(:current_user) do
       OpenStruct.new
     end
@@ -117,7 +117,7 @@ RSpec.describe Operations::Normalizer do
       end
 
       it "should present data" do
-        expect(presenter.represent).to eq(
+        expect(presenter.normalize).to eq(
           first_name: "Jhon",
           last_name: "Brown",
           addresses: nil,
@@ -141,7 +141,7 @@ RSpec.describe Operations::Normalizer do
       let(:models_list) { [model, model2] }
 
       it "should present data" do
-        expect(Presenter.represent(models_list)).to match_array([
+        expect(Presenter.normalize(models_list)).to match_array([
           {
             first_name: "Jhon",
             last_name: "Brown",
