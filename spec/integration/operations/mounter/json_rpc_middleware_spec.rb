@@ -1,4 +1,4 @@
-RSpec.describe Operations::Mounter::JsonRpcMiddleware do
+RSpec.describe Operations::Mounter::JsonRpc::Middleware do
   let(:app) { ->(_env) { [200, {"Content-Type" => "text/plain"}, ["From app"]] } }
 
   subject do
