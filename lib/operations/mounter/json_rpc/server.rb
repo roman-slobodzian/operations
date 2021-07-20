@@ -23,7 +23,7 @@ module Operations
 
           process
         rescue StandardError => e
-          # TODO use log level
+          # TODO: use log level
           rpc_response.internal_error(e.full_message)
         end
 

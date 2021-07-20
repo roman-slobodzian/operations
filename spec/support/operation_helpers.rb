@@ -1,7 +1,6 @@
 module OperationHelpers
   def build_operation_class(class_name = nil, &block)
-    klass = Class.new do
-      include Operations::Operation
+    klass = Class.new(Operations::Operation) do
       class_attribute :name, default: class_name
     end
 

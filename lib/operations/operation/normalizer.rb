@@ -1,5 +1,5 @@
 module Operations
-  module Operation
+  class Operation
     module Normalizer
       extend ActiveSupport::Concern
 

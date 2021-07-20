@@ -1,8 +1,6 @@
 RSpec.describe Operations::Validation do
   let(:operation_class) do
-    Class.new do
-      include Operations::Operation
-
+    Class.new(Operations::Operation) do
       validate do
         params do
           required(:email).filled(:string)

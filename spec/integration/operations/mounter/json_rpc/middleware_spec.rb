@@ -8,9 +8,7 @@ RSpec.describe Operations::Mounter::JsonRpc::Middleware do
   context "POST" do
     context "successful operation" do
       let(:operation_class) do
-        Class.new do
-          include Operations::Operation
-
+        Class.new(Operations::Operation) do
           class_attribute :name, default: "Operations::Post::Create"
 
           def execute; end
@@ -32,9 +30,7 @@ RSpec.describe Operations::Mounter::JsonRpc::Middleware do
   context "failed operation" do
     context "validation error" do
       let(:operation_class) do
-        Class.new do
-          include Operations::Operation
-
+        Class.new(Operations::Operation) do
           class_attribute :name, default: "Operations::Post::Create"
 
           def execute; end
@@ -60,9 +56,7 @@ RSpec.describe Operations::Mounter::JsonRpc::Middleware do
 
     context "exception" do
       let(:operation_class) do
-        Class.new do
-          include Operations::Operation
-
+        Class.new(Operations::Operation) do
           class_attribute :name, default: "Operations::Post::Fetch"
 
           def execute
@@ -86,9 +80,7 @@ RSpec.describe Operations::Mounter::JsonRpc::Middleware do
 
     context "method not found" do
       let(:operation_class) do
-        Class.new do
-          include Operations::Operation
-
+        Class.new(Operations::Operation) do
           class_attribute :name, default: "Operations::Post::Fetch"
         end
       end
@@ -108,9 +100,7 @@ RSpec.describe Operations::Mounter::JsonRpc::Middleware do
 
     context "invalid json" do
       let(:operation_class) do
-        Class.new do
-          include Operations::Operation
-
+        Class.new(Operations::Operation) do
           class_attribute :name, default: "Operations::Post::Create"
         end
       end
@@ -132,9 +122,7 @@ RSpec.describe Operations::Mounter::JsonRpc::Middleware do
 
   context "wrong path" do
     let(:operation_class) do
-      Class.new do
-        include Operations::Operation
-
+      Class.new(Operations::Operation) do
         class_attribute :name, default: "Operations::Post::Create"
       end
     end

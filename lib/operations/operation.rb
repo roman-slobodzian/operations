@@ -1,14 +1,10 @@
 module Operations
-  module Operation
-    extend ActiveSupport::Concern
+  class Operation
+    include Memoize
+    include Validation
+    include Operation::Normalizer
 
-    included do
-      include Memoize
-      include Validation
-      include Operation::Normalizer
-
-      attr_accessor :params, :user_token
-    end
+    attr_accessor :params, :user_token
 
     def initialize(params: nil, user_token: nil)
       self.params = params
@@ -23,6 +19,16 @@ module Operations
       self
     end
 
+    def failure?
+      !success?
+    end
+
+    def success?
+      self[:errors].empty?
+    end
+
+    private
+
     # Business logic code should be implemented in this method
     def execute
       raise NotImplementedError(%(Please implement "execute" method in #{self.class.name} operation class))
@@ -31,14 +37,6 @@ module Operations
     # Is used for business logic and normalizer
     def resource
       raise NotImplementedError(%(Please implement "resource" method in #{self.class.name} operation class))
-    end
-
-    def failure?
-      !success?
-    end
-
-    def success?
-      self[:errors].empty?
     end
   end
 end

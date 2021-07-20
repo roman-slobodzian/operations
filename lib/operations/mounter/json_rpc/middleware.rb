@@ -5,11 +5,11 @@ module Operations
     module JsonRpc
       class Middleware
         APPLICATION_JSON = "application/json".freeze
-        APPLICATION_JSON_HEADER = { "Content-Type" => "application/json" }.freeze
+        APPLICATION_JSON_HEADER = {"Content-Type" => "application/json"}.freeze
 
         attr_reader :app, :operation_classes, :mount_path
 
-        def initialize(app, operation_classes:, path: '/')
+        def initialize(app, operation_classes:, path: "/")
           @app = app
           @mount_path = path
           @operation_classes = operation_classes
@@ -28,14 +28,14 @@ module Operations
           resp.finish
         end
 
+        def self.operation_name(operation_class)
+          operation_class.name.match(/(Operations::)?(.+)$/)[2].underscore
+        end
+
         private
 
         def operation_classes_map
           @operation_classes_map ||= operation_classes.map { |o| [self.class.operation_name(o), o] }.to_h
-        end
-
-        def self.operation_name(operation_class)
-          operation_class.name.match(/(Operations::)?(.+)$/)[2].underscore
         end
       end
     end

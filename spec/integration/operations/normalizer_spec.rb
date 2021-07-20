@@ -89,7 +89,7 @@ RSpec.describe Operations::Normalizer do
       OpenStruct.new(model_data)
     end
 
-    let(:model2_data) do
+    let(:model_2_data) do
       {
         first_name: "Tom",
         last_name: "Fox",
@@ -107,8 +107,8 @@ RSpec.describe Operations::Normalizer do
       }
     end
 
-    let(:model2) do
-      OpenStruct.new(model2_data)
+    let(:model_2) do
+      OpenStruct.new(model_2_data)
     end
 
     context "single model" do
@@ -138,7 +138,7 @@ RSpec.describe Operations::Normalizer do
     end
 
     context "collection of models" do
-      let(:models_list) { [model, model2] }
+      let(:models_list) { [model, model_2] }
 
       it "should present data" do
         expect(Presenter.normalize(models_list)).to match_array([
