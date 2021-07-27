@@ -1,5 +1,7 @@
 # Detect all the data required to describe API endpoint from Operation class
 
+# TODO, support batch calls
+# TODO, send user as a token in order to support delayed call in future
 module Operations
   module Mounter
     module JsonRpc

@@ -1,0 +1,80 @@
+const DEFAULT_HEADERS = {
+  'Accept': 'application/json',
+  'Content-Type': 'application/json',
+};
+
+interface OperationsClientParams {
+  endpoint: string
+  userToken?: string
+  debug?: boolean
+}
+
+<% operation_presenters.each do |operation| %>
+  export namespace <%= operation.namespace_name %> {
+    export class Params <%= operation.render_params_types %>
+  }
+<% end %>
+
+export default class OperationsClient {
+  lastId: number
+  endpoint: string
+  userToken: string
+  isDebugEnabled: boolean
+
+  constructor({ endpoint, userToken, debug }: OperationsClientParams) {
+    this.lastId = 0;
+    this.endpoint = endpoint;
+    this.userToken = userToken;
+    this.isDebugEnabled = debug || false;
+  }
+
+  request(method, ...params) {
+    const id = this.lastId++;
+
+    const req = {
+      method: 'POST',
+      headers: DEFAULT_HEADERS,
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id,
+        method,
+        params: Array.isArray(params) ? params : [params],
+      }),
+    };
+
+    if (this.isDebugEnabled === true) {
+      console.log('Executing request', this.lastId, 'to', this.endpoint, ':', req);
+    }
+
+    return fetch(this.endpoint, req)
+      .then(res => this.checkResponseStatus(req, res))
+      .then(res => res.json())
+      .then(res => this.checkError(res, req))
+  }
+
+  checkError(response, request) {
+    console.log(response, request)
+
+    return response
+  }
+
+  checkResponseStatus(request, response) {
+    if (response.status === 200) return response;
+
+    throw new RpcError(response.statusText, request, response);
+  }
+}
+
+export class RpcError extends Error {
+  request: any
+  response: Response
+
+  constructor(message: string, request: any, response: Response) {
+    super(message);
+
+    this.name = 'RpcError';
+    this.message = (message || '');
+    this.request = request;
+    this.response = response;
+  }
+}
