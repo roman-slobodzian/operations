@@ -4,8 +4,10 @@ module Operations
 
     included do
       class_attribute :schema, default: []
-      class_attribute :path
       class_attribute :collection, default: false
+      class_attribute :null, default: false
+      class_attribute :type, default: :hash
+      class_attribute :path
       attr_reader :data, :query
     end
 
@@ -16,12 +18,13 @@ module Operations
         ]
       end
 
-      def embed(path, collection: false, &block)
+      def embed(path, collection: false, null: false, &block)
         self.schema += [
           Class.new do
             include ::Operations::Normalizer
 
             self.path = path
+            self.null = null
             self.collection = collection
             class_eval(&block) if block_given?
           end

@@ -17,7 +17,7 @@ class Presenter
     end
   end
 
-  embed :addresses do
+  embed :addresses, collection: true do
     field :city, :string
     field :state, :string
   end
@@ -29,32 +29,41 @@ RSpec.describe Operations::Normalizer do
       parsed = Presenter.schema
 
       expect(parsed).to match_array([
-        have_attributes(path: :first_name),
-        have_attributes(path: :last_name),
+        have_attributes(path: :first_name, type: :string),
+        have_attributes(path: :last_name, type: :string),
         have_attributes(
           path: :addresses,
+          type: :hash,
+          collection: true,
           schema: match_array([
-            have_attributes(path: :city),
-            have_attributes(path: :state)
+            have_attributes(path: :city, type: :string),
+            have_attributes(path: :state, type: :string)
           ])
         ),
         have_attributes(
           path: :company,
+          type: :hash,
+          collection: false,
           schema: match_array([
             have_attributes(
-              path: :title
+              path: :title,
+              type: :string
             ),
             have_attributes(
               path: :location,
+              type: :hash,
+              collection: false,
               schema: match_array([
-                have_attributes(path: :city),
-                have_attributes(path: :state)
+                have_attributes(path: :city, type: :string),
+                have_attributes(path: :state, type: :string)
               ])
             ),
             have_attributes(
               path: :founding,
+              type: :hash,
+              collection: false,
               schema: match_array([
-                have_attributes(path: :year)
+                have_attributes(path: :year, type: :number)
               ])
             )
           ])

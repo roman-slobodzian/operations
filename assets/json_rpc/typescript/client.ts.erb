@@ -12,6 +12,8 @@ interface OperationsClientParams {
 <% operation_presenters.each do |operation| %>
   export namespace <%= operation.namespace_name %> {
     export class Params <%= operation.render_params_types %>
+
+    export class Result <%= operation.render_result_types %>
   }
 <% end %>
 

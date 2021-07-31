@@ -18,6 +18,12 @@ module Operations
           TypeScriptTypeRenderer.new.call({type: :hash, member: compiler.keys})
         end
 
+        def render_result_types
+          compiler = Operations::NormalizerSchemaCompiler.new(operation_class.normalizer_class)
+
+          TypeScriptTypeRenderer.new.call({type: :hash, member: compiler.call})
+        end
+
         private
 
         attr_reader :operation_class

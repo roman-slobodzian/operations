@@ -1,8 +1,25 @@
+class PostNormalizer
+  include Operations::Normalizer
+
+  field :first_name, :string
+  field :last_name, :string, null: true
+
+  embed :company do
+    field :title, :string
+  end
+
+  embed :companies, collection: true do
+    field :title, :string
+  end
+end
+
 RSpec.describe Operations::ClientGenerators::JsonRpc::TypeScript do
   let(:app) { ->(_env) { [200, {"Content-Type" => "text/plain"}, ["From app"]] } }
   let(:operation_class) do
     Class.new(Operations::Operation) do
       class_attribute :name, default: "Operations::Post::Create"
+
+      normalizer_class! PostNormalizer
 
       validate do
         params do
@@ -36,11 +53,9 @@ RSpec.describe Operations::ClientGenerators::JsonRpc::TypeScript do
   end
 
   it "generates client" do
-    # TODO, fix visit_or for arrays (merge "in left or in right")
     # TODO, test in project
     # TODO, handle errors
     # TODO, handle errors
-    # TODO, add types for responses
 
     typescript = subject.call
     puts typescript.to_s
@@ -52,5 +67,10 @@ RSpec.describe Operations::ClientGenerators::JsonRpc::TypeScript do
     expect(typescript).to include("emails_3: Array<string> | Array<number>")
     expect(typescript).to match(/address: {\s+street: string\s+}/)
     expect(typescript).to match(/addresses: Array<{\s+city: string\s+}>/)
+
+    expect(typescript).to include("first_name: string")
+    expect(typescript).to include("last_name?: string")
+    expect(typescript).to match(/company: {\s+title: string\s+}/)
+    expect(typescript).to match(/companies: Array<{\s+title: string\s+}>/)
   end
 end

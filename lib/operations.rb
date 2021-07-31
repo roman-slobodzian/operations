@@ -30,6 +30,7 @@ require_relative "operations/client_generators/json_rpc/typescript_operation_pre
 require_relative "operations/client_generators/json_rpc/typescript"
 require_relative "operations/normalizer/field"
 require_relative "operations/normalizer"
+require_relative "operations/normalizer_schema_compiler"
 require_relative "operations/operation/normalizer"
 require_relative "operations/operation/auto_registration"
 require_relative "operations/validation"
