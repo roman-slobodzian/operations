@@ -13,7 +13,11 @@ interface OperationsClientParams {
   export namespace <%= operation.namespace_name %> {
     export class Params <%= operation.render_params_types %>
 
-    export class Result <%= operation.render_result_types %>
+    <% if operation.normalizer_class %>
+      export class Result <%= operation.render_result_types %>
+    <% else %>
+      export type Result = void;
+    <% end %>
   }
 <% end %>
 
@@ -29,6 +33,8 @@ export default class OperationsClient {
     this.userToken = userToken;
     this.isDebugEnabled = debug || false;
   }
+
+  <%= render_call_methods %>
 
   request(method, ...params) {
     const id = this.lastId++;

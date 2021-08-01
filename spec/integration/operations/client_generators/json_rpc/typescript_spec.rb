@@ -41,15 +41,25 @@ RSpec.describe Operations::ClientGenerators::JsonRpc::TypeScript do
       end
 
       def execute; end
+    end
+  end
 
-      def normalize
-        {name: "Fake name"}
+  let(:operation_class_2) do
+    Class.new(Operations::Operation) do
+      class_attribute :name, default: "Operations::Post::Comment::Delete"
+
+      validate do
+        params do
+          required(:comment_id).filled(:int?)
+        end
       end
+
+      def execute; end
     end
   end
 
   subject do
-    described_class.new([operation_class])
+    described_class.new([operation_class, operation_class_2])
   end
 
   it "generates client" do
@@ -59,6 +69,8 @@ RSpec.describe Operations::ClientGenerators::JsonRpc::TypeScript do
 
     typescript = subject.call
     puts typescript.to_s
+
+    # Dry schema
     expect(typescript).to include("export namespace Post.Create")
     expect(typescript).to include("email: null | string")
     expect(typescript).to include("email_2?: string")
@@ -68,9 +80,22 @@ RSpec.describe Operations::ClientGenerators::JsonRpc::TypeScript do
     expect(typescript).to match(/address: {\s+street: string\s+}/)
     expect(typescript).to match(/addresses: Array<{\s+city: string\s+}>/)
 
+    # Normalizer schema
     expect(typescript).to include("first_name: string")
     expect(typescript).to include("last_name?: string")
     expect(typescript).to match(/company: {\s+title: string\s+}/)
     expect(typescript).to match(/companies: Array<{\s+title: string\s+}>/)
+
+    # Void normalizer schema
+    expect(typescript).to include("export type Result = void")
+
+    # Call methods
+    expect(typescript).to match(%r{post = \{\
+\s+create: \(params: Post\.Create\.Params\): Promise<Post\.Create\.Result> => \{\
+\s+return this\.request\('post/create', params\);\s+\
+\},\
+\s+comment: \{\
+\s+delete: \(params: Post\.Comment\.Delete\.Params\): Promise<Post\.Comment\.Delete\.Result> => \{\
+\s+return this\.request\('post/comment/delete', params\);\s+\}\s+\}\s+\}})
   end
 end
