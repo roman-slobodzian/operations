@@ -5,9 +5,7 @@ module Operations
     end
 
     def call
-      normalizer.schema.map do |property|
-        [property.path, format_property(property)]
-      end.to_h
+      format_nested(normalizer)
     end
 
     def format_property(property)
@@ -16,14 +14,17 @@ module Operations
       {type: [type], required: !property.null}
     end
 
-    def format_nested(property)
-      member = NormalizerSchemaCompiler.new(property).call
+    def format_nested(normalizer)
+      member = normalizer.schema.map do |property|
+        [property.path, format_property(property)]
+      end.to_h
+
       type = {
         type: :hash,
         member: member
       }
 
-      if property.collection
+      if normalizer.collection
         {
           type: :array,
           member: [type]

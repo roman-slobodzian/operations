@@ -25,37 +25,40 @@ RSpec.describe Operations::NormalizerSchemaCompiler do
 
     it "should handle a basic presenter" do
       expect(subject).to eq(
-        first_name: {required: true, type: [type: :string]},
-        last_name: {required: false, type: [type: :string]},
-        company: {
-          required: true,
-          type: [
-            type: :hash,
-            member: {
-              title: {required: true, type: [type: :string]},
-              location: {
-                required: true,
-                type: [
-                  type: :hash,
-                  member: {
-                    state: {required: true, type: [type: :string]}
-                  }
-                ]
-              }
-            }
-          ]
-        },
-        addresses: {
-          required: true,
-          type: [
-            type: :array,
-            member: [
+        type: :hash,
+        member: {
+          first_name: {required: true, type: [type: :string]},
+          last_name: {required: false, type: [type: :string]},
+          company: {
+            required: true,
+            type: [
               type: :hash,
               member: {
-                city: {required: true, type: [type: :string]}
+                title: {required: true, type: [type: :string]},
+                location: {
+                  required: true,
+                  type: [
+                    type: :hash,
+                    member: {
+                      state: {required: true, type: [type: :string]}
+                    }
+                  ]
+                }
               }
             ]
-          ]
+          },
+          addresses: {
+            required: true,
+            type: [
+              type: :array,
+              member: [
+                type: :hash,
+                member: {
+                  city: {required: true, type: [type: :string]}
+                }
+              ]
+            ]
+          }
         }
       )
     end

@@ -19,7 +19,7 @@ RSpec.describe Operations::ClientGenerators::JsonRpc::TypeScript do
     Class.new(Operations::Operation) do
       class_attribute :name, default: "Operations::Post::Create"
 
-      normalizer_class! PostNormalizer
+      normalizer PostNormalizer
 
       validate do
         params do
@@ -63,10 +63,6 @@ RSpec.describe Operations::ClientGenerators::JsonRpc::TypeScript do
   end
 
   it "generates client" do
-    # TODO, test in project
-    # TODO, handle errors
-    # TODO, handle errors
-
     typescript = subject.call
     puts typescript.to_s
 

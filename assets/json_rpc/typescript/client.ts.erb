@@ -11,10 +11,10 @@ interface OperationsClientParams {
 
 <% operation_presenters.each do |operation| %>
   export namespace <%= operation.namespace_name %> {
-    export class Params <%= operation.render_params_types %>
+    export interface Params <%= operation.render_params_types %>
 
-    <% if operation.normalizer_class %>
-      export class Result <%= operation.render_result_types %>
+    <% if operation.defined_normalizer %>
+      export type Result = <%= operation.render_result_types %>
     <% else %>
       export type Result = void;
     <% end %>
@@ -24,7 +24,7 @@ interface OperationsClientParams {
 export default class OperationsClient {
   lastId: number
   endpoint: string
-  userToken: string
+  userToken?: string
   isDebugEnabled: boolean
 
   constructor({ endpoint, userToken, debug }: OperationsClientParams) {
@@ -36,7 +36,7 @@ export default class OperationsClient {
 
   <%= render_call_methods %>
 
-  request(method, ...params) {
+  request(method: string, ...params: any[]) {
     const id = this.lastId++;
 
     const req = {
@@ -60,13 +60,13 @@ export default class OperationsClient {
       .then(res => this.checkError(res, req))
   }
 
-  checkError(response, request) {
+  checkError(response: any, request: any) {
     console.log(response, request)
 
     return response
   }
 
-  checkResponseStatus(request, response) {
+  checkResponseStatus(request: any, response: any) {
     if (response.status === 200) return response;
 
     throw new RpcError(response.statusText, request, response);

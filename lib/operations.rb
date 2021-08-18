@@ -35,3 +35,5 @@ require_relative "operations/operation/normalizer"
 require_relative "operations/operation/auto_registration"
 require_relative "operations/validation"
 require_relative "operations/operation"
+
+require "operations/railtie" if defined?(Rails)
