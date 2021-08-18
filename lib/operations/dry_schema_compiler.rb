@@ -44,7 +44,7 @@ module Operations
 
       return unless key
 
-      keys[key][:type] << if opts[:member]
+      keys[key][:types] << if opts[:member]
         {
           type: :array,
           member: [type: :hash, member: target.keys]
@@ -113,7 +113,7 @@ module Operations
 
       key = opts[:key]
 
-      keys[key][:type] = [] unless keys[key][:type]
+      keys[key][:types] = [] unless keys[key][:types]
 
       return if %i[hash array].include?(type)
 
@@ -121,13 +121,13 @@ module Operations
 
       if opts[:member]
         if each_entered
-          keys[key][:type] << {type: :array, member: [formatted_type]}
+          keys[key][:types] << {type: :array, member: [formatted_type]}
           self.each_entered = false
         else
-          keys[key][:type].last[:member] << formatted_type
+          keys[key][:types].last[:member] << formatted_type
         end
       else
-        keys[key][:type] << formatted_type
+        keys[key][:types] << formatted_type
       end
     end
   end

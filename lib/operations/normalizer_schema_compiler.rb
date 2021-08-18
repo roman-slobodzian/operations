@@ -11,7 +11,7 @@ module Operations
     def format_property(property)
       type = property.type == :hash ? format_nested(property) : {type: property.type}
 
-      {type: [type], required: !property.null}
+      {types: [type], required: !property.null}
     end
 
     def format_nested(normalizer)

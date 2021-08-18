@@ -27,20 +27,20 @@ RSpec.describe Operations::NormalizerSchemaCompiler do
       expect(subject).to eq(
         type: :hash,
         member: {
-          first_name: {required: true, type: [type: :string]},
-          last_name: {required: false, type: [type: :string]},
+          first_name: {required: true, types: [type: :string]},
+          last_name: {required: false, types: [type: :string]},
           company: {
             required: true,
-            type: [
+            types: [
               type: :hash,
               member: {
-                title: {required: true, type: [type: :string]},
+                title: {required: true, types: [type: :string]},
                 location: {
                   required: true,
-                  type: [
+                  types: [
                     type: :hash,
                     member: {
-                      state: {required: true, type: [type: :string]}
+                      state: {required: true, types: [type: :string]}
                     }
                   ]
                 }
@@ -49,12 +49,12 @@ RSpec.describe Operations::NormalizerSchemaCompiler do
           },
           addresses: {
             required: true,
-            type: [
+            types: [
               type: :array,
               member: [
                 type: :hash,
                 member: {
-                  city: {required: true, type: [type: :string]}
+                  city: {required: true, types: [type: :string]}
                 }
               ]
             ]

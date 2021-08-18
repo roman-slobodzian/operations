@@ -25,7 +25,7 @@ module Operations
 
         def hash_to_ts(type)
           hash_type = type[:member].map do |name, key_type|
-            "#{name}#{key_type[:required] ? "" : "?"}: #{types_to_ts(key_type[:type])}"
+            "#{name}#{key_type[:required] ? "" : "?"}: #{types_to_ts(key_type[:types])}"
           end.join("\n")
 
           "{\n#{hash_type}\n}"
