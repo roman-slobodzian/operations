@@ -22,10 +22,22 @@ module Operations
         def operation_presenter_groups
           Hash.new { |h, k| h[k] = h.dup.clear }.tap do |groups|
             operation_presenters.map do |operation|
-              *namespaces, operation_name = operation.full_name_parts
+              *namespaces, operation_name = operation.namespace_parts
               namespaces.inject(groups, :[])[operation_name] = operation
             end
           end
+        end
+
+        def render_params_and_results(operations = operation_presenter_groups)
+          operations.map do |key, value|
+            assigment = if value.is_a?(Hash)
+              render_params_and_results(value)
+            else
+              "#{value.render_params_types_export}\n#{value.render_result_types_export}"
+            end
+
+            "export namespace #{key} {\n#{assigment}\n}".strip
+          end.join("\n")
         end
 
         def render_call_methods(operations = operation_presenter_groups, level: 0)
@@ -40,7 +52,7 @@ module Operations
               JS
             end
 
-            "#{key}#{level.zero? ? " = " : ": "}#{assigment}".strip
+            "#{key.camelize(:lower)}#{level.zero? ? " = " : ": "}#{assigment}".strip
           end.join(level.zero? ? "\n" : ",\n")
 
           level.zero? ? namespace_hash : "{\n#{namespace_hash}\n}"

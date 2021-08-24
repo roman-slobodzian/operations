@@ -100,7 +100,8 @@ RSpec.describe Operations::ClientGenerators::JsonRpc::TypeScript do
     puts typescript.to_s
 
     # Dry schema
-    expect(typescript).to include("export namespace Post.Create")
+    expect(typescript).to include("export namespace Post {")
+    expect(typescript).to include("export namespace Create {")
     expect(typescript).to include("email: null | string")
     expect(typescript).to include("email_2?: string")
     expect(typescript).to include("emails: Array<string>")
@@ -136,7 +137,7 @@ RSpec.describe Operations::ClientGenerators::JsonRpc::TypeScript do
 \s+count: \(params: Post\.Count\.Params\): Promise<Post\.Count\.Result> => \{\
 \s+return this\.request\('post/count', params\);\s+\
 \},\
-\s+ids_list: \(params: Post\.IdsList\.Params\): Promise<Post\.IdsList\.Result> => \{\
+\s+idsList: \(params: Post\.IdsList\.Params\): Promise<Post\.IdsList\.Result> => \{\
 \s+return this\.request\('post/ids_list', params\);\s+\
 \},\
 \s+comment: \{\

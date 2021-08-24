@@ -16,8 +16,8 @@ module Operations
           @full_name ||= Operations::Mounter::JsonRpc::Middleware.operation_name(operation_class)
         end
 
-        def full_name_parts
-          @full_name_parts ||= full_name.split("/")
+        def namespace_parts
+          @namespace_parts ||= operation_class.name.match(/(Operations::)?(.+)$/)[2].split("::")
         end
 
         def render_params_types
@@ -35,6 +35,22 @@ module Operations
           )
 
           TypeScriptTypeRenderer.new.call(compiler.call)
+        end
+
+        def render_params_types_export
+          if operation_class.validation_contract
+            "export type Params = #{render_params_types}"
+          else
+            "export type Params = void"
+          end
+        end
+
+        def render_result_types_export
+          if operation_class.defined_normalizer
+            "export type Result = #{render_result_types}"
+          else
+            "export type Result = void"
+          end
         end
 
         private
