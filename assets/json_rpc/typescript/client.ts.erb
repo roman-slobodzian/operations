@@ -26,7 +26,7 @@ export default class OperationsClient {
 
   <%= render_call_methods %>
 
-  request(method: string, ...params: any[]) {
+  request(method: string, params: any) {
     const id = this.lastId++;
 
     const req = {
@@ -36,7 +36,7 @@ export default class OperationsClient {
         jsonrpc: '2.0',
         id,
         method,
-        params: Array.isArray(params) ? params : [params],
+        params: { params },
       }),
     };
 
@@ -48,6 +48,7 @@ export default class OperationsClient {
       .then(res => this.checkResponseStatus(req, res))
       .then(res => res.json())
       .then(res => this.checkError(res, req))
+      .then(res => res.result)
   }
 
   checkError(response: any, request: any) {

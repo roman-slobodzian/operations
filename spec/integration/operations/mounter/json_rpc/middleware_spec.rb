@@ -14,13 +14,13 @@ RSpec.describe Operations::Mounter::JsonRpc::Middleware do
           def execute; end
 
           def normalize
-            {name: "Fake name"}
+            params
           end
         end
       end
 
       it "mount and run operation on endpoint" do
-        rpc_call("post/create", params: {}, user_token: nil)
+        rpc_call("post/create", params: {name: "Fake name"}, user_token: nil)
 
         rcp_response_is_expected.to include("result" => {"name" => "Fake name"})
       end
@@ -135,7 +135,7 @@ RSpec.describe Operations::Mounter::JsonRpc::Middleware do
     end
   end
 
-  def rpc_call(method_name, params = [])
+  def rpc_call(method_name, params = {})
     env = Rack::MockRequest.env_for(
       "/",
       lint: true,

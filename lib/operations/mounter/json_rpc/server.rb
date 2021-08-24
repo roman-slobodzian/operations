@@ -26,6 +26,10 @@ module Operations
           process
         rescue StandardError => e
           # TODO: use log level
+          if defined?(Rails)
+            Rails.logger.error e.message
+            Rails.logger.error e.backtrace.join("\n")
+          end
           rpc_response.internal_error(e.full_message)
         end
 
@@ -46,15 +50,15 @@ module Operations
 
           return rpc_response.method_not_found unless operation_class
 
-          operation = operation_class.new(**sanitized_args).call
+          operation = operation_class.new(**sanitized_params).call
 
           return rpc_response.result(operation.normalize) if operation.success?
 
           rpc_response.operation_validation_error(operation[:errors])
         end
 
-        def sanitized_args
-          @sanitized_args ||= case request["params"]
+        def sanitized_params
+          @sanitized_params ||= case request["params"]
           when Hash
             request["params"].symbolize_keys
           when nil
