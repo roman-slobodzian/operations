@@ -2,7 +2,7 @@ module Operations
   module ClientGenerators
     module JsonRpc
       class TypeScriptOperationPresenter
-        delegate :defined_normalizer, to: :operation_class
+        delegate :defined_normalizer, :validation_contract, to: :operation_class
 
         def initialize(operation_class)
           @operation_class = operation_class
@@ -25,11 +25,14 @@ module Operations
           compiler.call(operation_class.validation_contract.schema.to_ast)
           compiler.keys
 
-          TypeScriptTypeRenderer.new.call({type: :hash, member: compiler.keys})
+          TypeScriptTypeRenderer.new.call({types: [{type: :hash, member: compiler.keys}]})
         end
 
         def render_result_types
-          compiler = Operations::NormalizerSchemaCompiler.new(operation_class.defined_normalizer)
+          compiler = Operations::NormalizerSchemaCompiler.new(
+            operation_class.defined_normalizer,
+            collection: operation_class.collection?
+          )
 
           TypeScriptTypeRenderer.new.call(compiler.call)
         end

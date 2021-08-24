@@ -14,7 +14,7 @@ module Operations
     def call
       return self if failure?
 
-      execute
+      self[:result] = execute
 
       self
     end
@@ -27,16 +27,15 @@ module Operations
       self[:errors].empty?
     end
 
+    def result
+      nil
+    end
+
     private
 
     # Business logic code should be implemented in this method
     def execute
-      raise NotImplementedError(%(Please implement "execute" method in #{self.class.name} operation class))
-    end
-
-    # Is used for business logic and normalizer
-    def resource
-      raise NotImplementedError(%(Please implement "resource" method in #{self.class.name} operation class))
+      raise NotImplementedError, %(Please implement "execute" method in #{self.class.name} operation class)
     end
   end
 end

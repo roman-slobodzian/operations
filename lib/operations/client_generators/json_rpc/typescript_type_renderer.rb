@@ -2,8 +2,8 @@ module Operations
   module ClientGenerators
     module JsonRpc
       class TypeScriptTypeRenderer
-        def call(type)
-          type_to_ts(type)
+        def call(property)
+          types_to_ts(property[:types])
         end
 
         private

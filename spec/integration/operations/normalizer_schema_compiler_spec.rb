@@ -25,41 +25,44 @@ RSpec.describe Operations::NormalizerSchemaCompiler do
 
     it "should handle a basic presenter" do
       expect(subject).to eq(
-        type: :hash,
-        member: {
-          first_name: {required: true, types: [type: :string]},
-          last_name: {required: false, types: [type: :string]},
-          company: {
-            required: true,
-            types: [
-              type: :hash,
-              member: {
-                title: {required: true, types: [type: :string]},
-                location: {
-                  required: true,
-                  types: [
-                    type: :hash,
-                    member: {
-                      state: {required: true, types: [type: :string]}
-                    }
-                  ]
-                }
-              }
-            ]
-          },
-          addresses: {
-            required: true,
-            types: [
-              type: :array,
-              member: [
+        required: true,
+        types: [
+          type: :hash,
+          member: {
+            first_name: {required: true, types: [type: :string]},
+            last_name: {required: false, types: [type: :string]},
+            company: {
+              required: true,
+              types: [
                 type: :hash,
                 member: {
-                  city: {required: true, types: [type: :string]}
+                  title: {required: true, types: [type: :string]},
+                  location: {
+                    required: true,
+                    types: [
+                      type: :hash,
+                      member: {
+                        state: {required: true, types: [type: :string]}
+                      }
+                    ]
+                  }
                 }
               ]
-            ]
+            },
+            addresses: {
+              required: true,
+              types: [
+                type: :array,
+                member: [
+                  type: :hash,
+                  member: {
+                    city: {required: true, types: [type: :string]}
+                  }
+                ]
+              ]
+            }
           }
-        }
+        ]
       )
     end
   end

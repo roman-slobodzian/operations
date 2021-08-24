@@ -2,6 +2,8 @@ module Operations
   module Normalizer
     extend ActiveSupport::Concern
 
+    TYPES = %i[number string boolean].freeze
+
     included do
       class_attribute :schema, default: []
       class_attribute :collection, default: false
@@ -12,23 +14,22 @@ module Operations
     end
 
     class_methods do
-      def field(path, type, null: false)
-        self.schema += [
-          ::Operations::Normalizer::Field.build_class(path: path, type: type, null: null)
-        ]
-      end
-
-      def embed(path, collection: false, null: false, &block)
+      def field(path, type, collection: false, null: false, &block)
         self.schema += [
           Class.new do
             include ::Operations::Normalizer
 
             self.path = path
+            self.type = type
             self.null = null
             self.collection = collection
             class_eval(&block) if block_given?
           end
         ]
+      end
+
+      def embed(path, collection: false, null: false, &block)
+        field(path, :hash, collection: collection, null: null, &block)
       end
 
       def normalize(data, **params)
@@ -48,6 +49,17 @@ module Operations
     def normalize
       return nil if data.nil?
 
+      return normalize_schema if type == :hash
+
+      normalize_scalar
+    end
+
+    def normalize_scalar
+      # TODO: validate datatype and log
+      data
+    end
+
+    def normalize_schema
       schema.reduce({}) do |acc, field|
         next acc if query && !query.include?(field.path)
 

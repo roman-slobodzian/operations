@@ -11,7 +11,11 @@ interface OperationsClientParams {
 
 <% operation_presenters.each do |operation| %>
   export namespace <%= operation.namespace_name %> {
-    export interface Params <%= operation.render_params_types %>
+    <% if operation.validation_contract %>
+      export type Params = <%= operation.render_params_types %>
+    <% else %>
+      export type Params = void;
+    <% end %>
 
     <% if operation.defined_normalizer %>
       export type Result = <%= operation.render_result_types %>

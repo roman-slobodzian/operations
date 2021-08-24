@@ -1,18 +1,3 @@
-class PostNormalizer
-  include Operations::Normalizer
-
-  field :first_name, :string
-  field :last_name, :string, null: true
-
-  embed :company do
-    field :title, :string
-  end
-
-  embed :companies, collection: true do
-    field :title, :string
-  end
-end
-
 RSpec.describe Operations::ClientGenerators::JsonRpc::TypeScript do
   let(:app) { ->(_env) { [200, {"Content-Type" => "text/plain"}, ["From app"]] } }
   let(:operation_class) do
@@ -44,7 +29,7 @@ RSpec.describe Operations::ClientGenerators::JsonRpc::TypeScript do
     end
   end
 
-  let(:operation_class_2) do
+  let(:nested_operation_class) do
     Class.new(Operations::Operation) do
       class_attribute :name, default: "Operations::Post::Comment::Delete"
 
@@ -58,8 +43,56 @@ RSpec.describe Operations::ClientGenerators::JsonRpc::TypeScript do
     end
   end
 
+  let(:list_operation_class) do
+    Class.new(Operations::Operation) do
+      class_attribute :name, default: "Operations::Post::List"
+
+      normalizer PostNormalizer, collection: true
+
+      def execute; end
+    end
+  end
+
+  let(:scalar_operation_class) do
+    Class.new(Operations::Operation) do
+      class_attribute :name, default: "Operations::Post::Count"
+
+      normalizer :number
+
+      def execute; end
+    end
+  end
+
+  let(:scalars_operation_class) do
+    Class.new(Operations::Operation) do
+      class_attribute :name, default: "Operations::Post::IdsList"
+
+      normalizer :number, collection: true
+
+      def execute; end
+    end
+  end
+
   subject do
-    described_class.new([operation_class, operation_class_2])
+    described_class.new([operation_class, list_operation_class, scalar_operation_class, scalars_operation_class,
+                         nested_operation_class])
+  end
+
+  before do
+    stub_const("PostNormalizer", Class.new do
+      include Operations::Normalizer
+
+      field :first_name, :string
+      field :last_name, :string, null: true
+
+      embed :company do
+        field :title, :string
+      end
+
+      embed :companies, collection: true do
+        field :title, :string
+      end
+    end)
   end
 
   it "generates client" do
@@ -85,13 +118,32 @@ RSpec.describe Operations::ClientGenerators::JsonRpc::TypeScript do
     # Void normalizer schema
     expect(typescript).to include("export type Result = void")
 
+    # Collection
+    expect(typescript).to include("export type Result = Array<{")
+
+    # Scalars
+    expect(typescript).to include("export type Result = number")
+    expect(typescript).to include("export type Result = Array<number>")
+
     # Call methods
     expect(typescript).to match(%r{post = \{\
 \s+create: \(params: Post\.Create\.Params\): Promise<Post\.Create\.Result> => \{\
 \s+return this\.request\('post/create', params\);\s+\
 \},\
+\s+list: \(params: Post\.List\.Params\): Promise<Post\.List\.Result> => \{\
+\s+return this\.request\('post/list', params\);\s+\
+\},\
+\s+count: \(params: Post\.Count\.Params\): Promise<Post\.Count\.Result> => \{\
+\s+return this\.request\('post/count', params\);\s+\
+\},\
+\s+ids_list: \(params: Post\.IdsList\.Params\): Promise<Post\.IdsList\.Result> => \{\
+\s+return this\.request\('post/ids_list', params\);\s+\
+\},\
 \s+comment: \{\
 \s+delete: \(params: Post\.Comment\.Delete\.Params\): Promise<Post\.Comment\.Delete\.Result> => \{\
-\s+return this\.request\('post/comment/delete', params\);\s+\}\s+\}\s+\}})
+\s+return this\.request\('post/comment/delete', params\);\
+\s+\}\
+\s+\}\
+\s+\}})
   end
 end
