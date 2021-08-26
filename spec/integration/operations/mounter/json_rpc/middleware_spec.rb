@@ -14,7 +14,7 @@ RSpec.describe Operations::Mounter::JsonRpc::Middleware do
           def execute; end
 
           def normalize
-            params
+            raw_params
           end
         end
       end

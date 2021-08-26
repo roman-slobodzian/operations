@@ -13,6 +13,8 @@ module Operations
           @app = app
           @mount_path = path
           @operation_classes = operation_classes
+
+          setup_code_reloader
         end
 
         def call(env)
@@ -36,6 +38,17 @@ module Operations
 
         def operation_classes_map
           @operation_classes_map ||= operation_classes.map { |o| [self.class.operation_name(o), o] }.to_h
+        end
+
+        def setup_code_reloader
+          return unless defined?(::Rails::Autoloaders)
+
+          operation_classes.each do |operation_class|
+            ::Rails::Autoloaders.main.on_load(operation_class.name) do
+              @operation_classes_map = nil
+              self.operation_classes = operation_classes.map { |o| o.name.constantize }
+            end
+          end
         end
       end
     end

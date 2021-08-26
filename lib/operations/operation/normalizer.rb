@@ -8,6 +8,8 @@ module Operations
         class_attribute :_collection, default: false
 
         def normalize(query: nil)
+          return unless self.class.defined_normalizer
+
           self.class.defined_normalizer.normalize(self[:result], query: query)
         end
       end

@@ -4,10 +4,10 @@ module Operations
     include Validation
     include Operation::Normalizer
 
-    attr_accessor :params, :user_token
+    attr_accessor :raw_params, :user_token
 
     def initialize(params: nil, user_token: nil)
-      self.params = params
+      self.raw_params = params
       self.user_token = user_token
     end
 
