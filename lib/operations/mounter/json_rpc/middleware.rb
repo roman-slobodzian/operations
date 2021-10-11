@@ -46,7 +46,7 @@ module Operations
           operation_classes.each do |operation_class|
             ::Rails::Autoloaders.main.on_load(operation_class.name) do
               @operation_classes_map = nil
-              self.operation_classes = operation_classes.map { |o| o.name.constantize }
+              @operation_classes = operation_classes.map { |o| o.name.constantize }
             end
           end
         end
